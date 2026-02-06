@@ -32,7 +32,7 @@ return new class extends Migration {
             $table->enum('type_en', $this->enumArrEn)->default('god');
             $table->text('short_description')->nullable();
             $table->longText('description')->nullable();
-            $table->json('meta')->nullable();
+            $table->jsonb('meta')->nullable();
             $table->timestamps();
         });
     }
