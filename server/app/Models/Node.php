@@ -20,12 +20,9 @@ class Node extends Model
         'meta',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'meta' => 'array',
-        ];
-    }
+    protected $casts = [
+        'meta' => 'array',
+    ];
 
     /* ================= relations ================= */
 

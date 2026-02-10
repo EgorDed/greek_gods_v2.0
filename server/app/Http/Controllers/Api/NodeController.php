@@ -31,8 +31,6 @@ class NodeController extends Controller
     public function store(StoreNodeRequest $request)
     {
         $data = $request->validated();
-        // Нужно конвертировать в json чтобы дб приняла.
-        $data['meta'] = json_encode($data['meta']);
 
         return Node::create($data);
     }
