@@ -6,7 +6,7 @@ use App\Models\Node;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreNodeRequest extends FormRequest
+class NodeRequest extends FormRequest
 {
     public function rules(): array
     {
@@ -34,13 +34,18 @@ class StoreNodeRequest extends FormRequest
         return [
             'code.required' => 'Код обязателен',
             'code.unique' => 'Такой код уже существует',
+
             'title.required' => 'Заголовок обязателен',
+
             'type.required' => 'Тип обязателен',
             'type.in' => 'Недопустимый тип сущности',
             'type_en.required' => 'Тип обязателен',
             'type_en.in' => 'Недопустимый тип сущности',
+
             'short_description.required' => 'Краткое описание обязательно',
+
             'description.required' => 'Описание обязательно',
+
             'meta.array' => 'Meta должно быть объектом',
         ];
     }

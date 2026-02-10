@@ -37,13 +37,13 @@ class Edge extends Model
     /* ================= enums ================= */
 
     public const TYPES = [
-        'родитель'     => 'parent',
-        'ребенок'      => 'child',
-        'супруг'       => 'spouse',
-        'враг'         => 'enemy',
-        'союзник'      => 'ally',
-        'владелец'     => 'owns',
-        'участвует'    => 'participates',
+        'родитель' => 'parent',
+        'ребенок' => 'child',
+        'супруг' => 'spouse',
+        'враг' => 'enemy',
+        'союзник' => 'ally',
+        'владелец' => 'owns',
+        'участвует' => 'participates',
         'расположен в' => 'located_in',
     ];
 }

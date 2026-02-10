@@ -39,11 +39,11 @@ class Node extends Model
     /* ================= enums ================= */
 
     public const TYPES = [
-        'бог'       => 'god',
-        'миф'       => 'myth',
-        'артефакт'  => 'artifact',
-        'место'     => 'place',
-        'событие'   => 'event',
-        'герой'     => 'hero',
+        'бог' => 'god',
+        'миф' => 'myth',
+        'артефакт' => 'artifact',
+        'место' => 'place',
+        'событие' => 'event',
+        'герой' => 'hero',
     ];
 }

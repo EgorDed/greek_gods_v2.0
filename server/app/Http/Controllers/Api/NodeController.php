@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreNodeRequest;
+use App\Http\Requests\NodeRequest;
 use App\Models\Node;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -28,7 +28,7 @@ class NodeController extends Controller
             ->paginate(50);
     }
 
-    public function store(StoreNodeRequest $request)
+    public function store(NodeRequest $request)
     {
         $data = $request->validated();
 
@@ -43,7 +43,7 @@ class NodeController extends Controller
         ]);
     }
 
-    public function update(StoreNodeRequest $request, Node $node)
+    public function update(NodeRequest $request, Node $node)
     {
         $data = $request->validated();
 
