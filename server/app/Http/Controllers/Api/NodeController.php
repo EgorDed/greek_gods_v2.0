@@ -43,17 +43,9 @@ class NodeController extends Controller
         ]);
     }
 
-    public function update(Request $request, Node $node)
+    public function update(StoreNodeRequest $request, Node $node)
     {
-        $data = $request->validate([
-            'code'              => 'string|unique:nodes,code,' . $node->id,
-            'title'             => 'string',
-            'type'              => 'string',
-            'type_en'           => 'string',
-            'short_description' => 'string',
-            'description'       => 'string',
-            'meta'              => 'nullable|array',
-        ]);
+        $data = $request->validated();
 
         $node->update($data);
 
