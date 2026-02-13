@@ -21,4 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('nodes', NodeController::class);
+Route::get('graph', [NodeController::class, 'graph']);
 Route::apiResource('edges', EdgeController::class);
