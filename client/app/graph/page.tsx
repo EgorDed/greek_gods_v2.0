@@ -2,13 +2,13 @@ import GraphArea from "@/app/graph/_components/GraphArea";
 import {GraphContextWrapper} from "@/app/graph/_components/GraphContextWrappper";
 import Header from "@/app/graph/_components/Header";
 
-export interface INode {
+export interface INode extends Record<string, unknown> {
     id: number,
     code: string,
     title: string,
     type: string,
     type_en: string,
-    meta: object,
+    meta: Record<string, unknown>,
     short_description: string,
     description: string,
     updated_at: string,

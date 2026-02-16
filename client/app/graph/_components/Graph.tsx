@@ -23,16 +23,17 @@ const nodeTypes = {
 const GraphInner = () => {
     const {graphData, setSelectedNode} = useGraphContext();
     const { setCenter } = useReactFlow();
-    const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+
+    const [nodes, setNodes, onNodesChange] = useNodesState<Node<INode>>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
         console.log("Graph is mounting...", graphData);
         setIsMounted(true);
-        
+
         if (graphData.nodes.length > 0) {
-            const calculatedNodes = graphData.nodes.map((node, index) => {
+            const calculatedNodes: Node<INode>[] = graphData.nodes.map((node, index) => {
                 const angle = (index / graphData.nodes.length) * 2 * Math.PI;
                 const radius = 250;
                 return {
@@ -42,9 +43,7 @@ const GraphInner = () => {
                         x: 500 + radius * Math.cos(angle),
                         y: 350 + radius * Math.sin(angle),
                     },
-                    data: {
-                        ...node,
-                    },
+                    data: node,
                 };
             });
 
@@ -72,8 +71,8 @@ const GraphInner = () => {
 
     if (!isMounted) return null;
 
-    const onNodeClick = (_: React.MouseEvent, node: INode) => {
-        setSelectedNode(node);
+    const onNodeClick = (_: React.MouseEvent, node: Node<INode>) => {
+        setSelectedNode(node.data);
         void setCenter(200, 200, { zoom: 1.2, duration: 800 });
     };
 
@@ -89,7 +88,7 @@ const GraphInner = () => {
                 }}
             />
 
-            <ReactFlow
+            <ReactFlow<Node<INode>, Edge>
                 nodes={nodes}
                 edges={edges}
                 nodeTypes={nodeTypes}
