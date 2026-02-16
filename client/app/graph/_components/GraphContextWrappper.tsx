@@ -1,9 +1,11 @@
 "use client";
 import React, { createContext, useContext } from 'react';
-import {IGraph} from "@/app/graph/page";
+import {IGraph, INode} from "@/app/graph/page";
 
 interface GraphContextType {
-    graphData: IGraph
+    graphData: IGraph;
+    selectedNode: INode | null;
+    setSelectedNode: (node: INode | null) => void;
 }
 
 const GraphContext = createContext<GraphContextType | undefined>(undefined);
@@ -17,9 +19,11 @@ export function GraphContextWrapper({
     children,
     graphData
 }: Readonly<GraphProviderProps>) {
+    const [selectedNode, setSelectedNode] = React.useState<INode | null>(null);
+
     return (
         <GraphContext.Provider
-            value={{graphData}}
+            value={{graphData, selectedNode, setSelectedNode}}
         >
             {children}
         </GraphContext.Provider>

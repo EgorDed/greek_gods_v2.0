@@ -1,14 +1,6 @@
 import { memo } from "react";
 import { Handle, Position } from "@xyflow/react";
 
-import { Button } from "@/components/ui/button";
-import {
-    BaseNode,
-    BaseNodeContent,
-    BaseNodeFooter,
-    BaseNodeHeader,
-    BaseNodeHeaderTitle,
-} from "@/components/base-node";
 import { Rocket } from "lucide-react";
 import {INode} from "@/app/graph/page";
 
@@ -18,7 +10,8 @@ export type BaseGraphNodeDemoProps = {
 };
 
 export const BaseGraphNodeDemo = memo(({data}: BaseGraphNodeDemoProps) => {
-    const glowColor = data.type_en === 'God' ? 'rgba(147, 51, 234, 0.6)' : 'rgba(59, 130, 246, 0.6)';
+    const glowColor =
+        data.type_en === 'God' ? 'rgba(147, 51, 234, 0.6)' : 'rgba(59, 130, 246, 0.6)';
     
     return (
         <div className="relative group">

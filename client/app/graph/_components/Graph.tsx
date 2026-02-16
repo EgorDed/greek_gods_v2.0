@@ -8,18 +8,21 @@ import {
     useNodesState,
     Node,
     Edge,
-    ReactFlowProvider
+    ReactFlowProvider,
+    useReactFlow
 } from "@xyflow/react";
-import "@xyflow/react/dist/style.css"; // Прямой импорт стилей библиотеки
+import "@xyflow/react/dist/style.css";
 import {BaseGraphNodeDemo} from "@/app/graph/_components/base/BaseGraphNode";
 import {useGraphContext} from "@/app/graph/_components/GraphContextWrappper";
+import {INode} from "@/app/graph/page";
 
 const nodeTypes = {
     baseGraphNode: BaseGraphNodeDemo,
 };
 
 const GraphInner = () => {
-    const {graphData} = useGraphContext();
+    const {graphData, setSelectedNode} = useGraphContext();
+    const { setCenter } = useReactFlow();
     const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
     const [isMounted, setIsMounted] = useState(false);
@@ -69,11 +72,15 @@ const GraphInner = () => {
 
     if (!isMounted) return null;
 
+    const onNodeClick = (_: React.MouseEvent, node: INode) => {
+        setSelectedNode(node);
+        void setCenter(200, 200, { zoom: 1.2, duration: 800 });
+    };
+
     return (
-        <div className="h-full w-full relative bg-[#020617]">
-            {/* Starry Sky Overlay */}
-            <div 
-                className="absolute inset-0 pointer-events-none z-0" 
+        <div className="h-full w-full relative">
+            <div
+                className="absolute inset-0 pointer-events-none z-0"
                 style={{
                     backgroundImage: `radial-gradient(circle at 50% 50%, #1e293b 0%, #020617 100%), 
                                      url('https://www.transparenttextures.com/patterns/stardust.png')`,
@@ -81,7 +88,7 @@ const GraphInner = () => {
                     opacity: 0.5
                 }}
             />
-            
+
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -89,6 +96,8 @@ const GraphInner = () => {
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={(params: Connection) => setEdges((eds) => addEdge(params, eds))}
+                onNodeClick={onNodeClick}
+                onPaneClick={() => setSelectedNode(null)}
                 fitView
                 colorMode="dark"
                 className="z-10"
