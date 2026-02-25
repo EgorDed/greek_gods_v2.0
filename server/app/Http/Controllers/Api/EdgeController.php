@@ -11,7 +11,7 @@ class EdgeController extends Controller
 {
     public function index()
     {
-        return Edge::with(['from', 'to'])->paginate(50);
+        return Edge::with(['fromNode', 'toNode'])->paginate(50);
     }
 
     public function store(EdgeRequest $request)
@@ -23,7 +23,7 @@ class EdgeController extends Controller
 
     public function show(Edge $edge)
     {
-        return $edge->load(['from', 'to']);
+        return $edge->load(['fromNode', 'toNode']);
     }
 
     public function update(EdgeRequest $request, Edge $edge)

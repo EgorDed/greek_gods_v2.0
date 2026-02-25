@@ -18,11 +18,35 @@ class Node extends Model
         'short_description',
         'description',
         'meta',
+        'x',
+        'y',
     ];
 
     protected $casts = [
         'meta' => 'array',
+        'x' => 'float',
+        'y' => 'float',
     ];
+
+    protected $appends = ['position'];
+
+    protected $hidden = ['x', 'y'];
+
+    public function getPositionAttribute(): array
+    {
+        return [
+            'x' => $this->x,
+            'y' => $this->y,
+        ];
+    }
+
+    public function setPositionAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['x'] = $value['x'] ?? 0;
+            $this->attributes['y'] = $value['y'] ?? 0;
+        }
+    }
 
     /* ================= relations ================= */
 

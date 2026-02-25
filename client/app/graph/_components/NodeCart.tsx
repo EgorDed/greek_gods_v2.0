@@ -40,17 +40,13 @@ const NodeCart = () => {
             <div className="px-4 space-y-4">
                 <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                        <span className="text-white/40 uppercase tracking-widest text-[10px] font-bold">Type</span>
+                        <span className="text-white/40 uppercase tracking-widest text-[10px] font-bold">Принадлежность</span>
                         <span className="text-purple-300 font-medium">{selectedNode.type}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-white/40 uppercase tracking-widest text-[10px] font-bold">Role</span>
-                        <span className="text-white/80">{selectedNode.type_en === 'God' ? 'Ruler of Olympus' : 'Hero of Myth'}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-white/40 uppercase tracking-widest text-[10px] font-bold">Updated</span>
-                        <span className="text-white/60 text-[11px]">{new Date(selectedNode.updated_at).toLocaleDateString()}</span>
-                    </div>
+                    {/*<div className="flex justify-between text-sm">*/}
+                    {/*    <span className="text-white/40 uppercase tracking-widest text-[10px] font-bold">Updated</span>*/}
+                    {/*    <span className="text-white/60 text-[11px]">{}</span>*/}
+                    {/*</div>*/}
                 </div>
 
                 <div className="pt-4 border-t border-white/10">
@@ -59,7 +55,6 @@ const NodeCart = () => {
                     </p>
                 </div>
 
-                {/* Actions */}
                 <div className="grid grid-cols-3 gap-2 pt-6 pb-8">
                     <Button variant="outline" className="bg-white/5 border-white/10 hover:bg-white/10 text-[10px] px-1 h-9 uppercase tracking-tighter">
                         Read More

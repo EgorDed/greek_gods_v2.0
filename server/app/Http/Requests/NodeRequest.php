@@ -11,7 +11,11 @@ class NodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code'  => ['required', 'string', 'unique:nodes,code'],
+            'code'  => [
+                'required',
+                'string',
+                Rule::unique('nodes', 'code')->ignore($this->route('node')),
+            ],
             'title' => ['required', 'string'],
             'type'  => [
                 'required',
@@ -26,6 +30,9 @@ class NodeRequest extends FormRequest
             'short_description' => ['required', 'string'],
             'description' => ['required', 'string'],
             'meta' => ['nullable', 'array'],
+            'position' => ['nullable', 'array'],
+            'position.x' => ['required_with:position', 'numeric'],
+            'position.y' => ['required_with:position', 'numeric'],
         ];
     }
 

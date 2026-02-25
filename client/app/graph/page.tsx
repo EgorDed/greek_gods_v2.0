@@ -8,11 +8,12 @@ export interface INode extends Record<string, unknown> {
     title: string,
     type: string,
     type_en: string,
-    meta: Record<string, unknown>,
-    short_description: string,
-    description: string,
+    meta: Record<string, unknown>  | null,
+    short_description: string  | null,
+    description: string  | null,
     updated_at: string,
-    created_at: string
+    created_at: string,
+    position: { x: number, y: number } | null
 }
 
 export interface IEdge {
@@ -21,7 +22,7 @@ export interface IEdge {
     to_node_id: number,
     type: string,
     type_en: string,
-    meta: object,
+    meta: object  | null,
     updated_at: string,
     created_at: string
 }

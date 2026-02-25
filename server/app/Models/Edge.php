@@ -40,6 +40,7 @@ class Edge extends Model
         'родитель' => 'parent',
         'ребенок' => 'child',
         'супруг' => 'spouse',
+        'брат' => 'brother',
         'враг' => 'enemy',
         'союзник' => 'ally',
         'владелец' => 'owns',
