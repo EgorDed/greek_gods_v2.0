@@ -12,7 +12,9 @@ const NODE_HEIGHT = 150;
 
 export const BaseGraphNodeDemo = memo(({ data }: BaseGraphNodeDemoProps) => {
   const glowColor = getNodeColor(data.type_en ?? "");
-  const iconPath = getNodeIconPath(data.code ?? "", data.type_en ?? "");
+  const iconPath = data.icon
+    ? `/icons/${data.icon}`
+    : getNodeIconPath(data.code ?? "", data.type_en ?? "");
 
   return (
     <div className="relative group">

@@ -15,6 +15,8 @@ export function getNodeColor(typeEn: string): string {
     event: "rgba(16, 185, 129, 0.7)",
     Artifact: "rgba(217, 119, 6, 0.7)",
     artifact: "rgba(217, 119, 6, 0.7)",
+    Demiurge: "rgba(251, 191, 36, 0.7)",
+    demiurge: "rgba(251, 191, 36, 0.7)",
   };
   return colors[typeEn] ?? "rgba(100, 116, 139, 0.7)";
 }
@@ -41,6 +43,7 @@ const ICON_BY_TYPE: Record<string, string> = {
   myth: "/icons/default.svg",
   event: "/icons/default.svg",
   artifact: "/icons/default.svg",
+  demiurge: "/icons/default.svg",
 };
 
 export function getNodeIconPath(code: string, typeEn: string): string {

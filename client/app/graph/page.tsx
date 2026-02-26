@@ -11,6 +11,8 @@ export interface INode extends Record<string, unknown> {
     meta: Record<string, unknown>  | null,
     short_description: string  | null,
     description: string  | null,
+    icon: string | null,
+    avatar: string | null,
     updated_at: string,
     created_at: string,
     position: { x: number, y: number } | null

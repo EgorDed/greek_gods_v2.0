@@ -25,13 +25,20 @@ const NodeCart = () => {
             {/* Image Section */}
             <div className="p-4">
                 <div className="aspect-[4/3] rounded-xl overflow-hidden border border-white/20 bg-gradient-to-br from-purple-900/40 to-black relative shadow-2xl shadow-purple-500/20">
-                    {/* Placeholder for character image */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                         <img 
-                            src={`https://api.dicebear.com/7.x/bottts/svg?seed=${selectedNode.code}`} 
-                            alt={selectedNode.title}
-                            className="w-3/4 h-3/4 opacity-80"
-                         />
+                        {selectedNode.avatar ? (
+                            <img
+                                src={`/avatars/${selectedNode.avatar}`}
+                                alt={selectedNode.title}
+                                className="w-full h-full object-cover opacity-90"
+                            />
+                        ) : (
+                            <img
+                                src={`https://api.dicebear.com/7.x/bottts/svg?seed=${selectedNode.code}`}
+                                alt={selectedNode.title}
+                                className="w-3/4 h-3/4 opacity-80"
+                            />
+                        )}
                     </div>
                 </div>
             </div>
