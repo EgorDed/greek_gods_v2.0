@@ -29,6 +29,8 @@ class NodeRequest extends FormRequest
             ],
             'short_description' => ['required', 'string'],
             'description' => ['required', 'string'],
+            'avatar' => ['nullable', 'string'],
+            'icon' => ['nullable', 'string'],
             'meta' => ['nullable', 'array'],
             'position' => ['nullable', 'array'],
             'position.x' => ['required_with:position', 'numeric'],

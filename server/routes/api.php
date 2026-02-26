@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EdgeController;
 use App\Http\Controllers\Api\NodeController;
 use Illuminate\Http\Request;
@@ -20,6 +21,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('nodes', NodeController::class);
+Route::post('login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout', [AuthController::class, 'logout']);
+
+    Route::post('admin/nodes', [NodeController::class, 'store']);
+    Route::put('admin/nodes/{node}', [NodeController::class, 'update']);
+    Route::delete('admin/nodes/{node}', [NodeController::class, 'destroy']);
+
+    Route::post('admin/edges', [EdgeController::class, 'store']);
+    Route::put('admin/edges/{edge}', [EdgeController::class, 'update']);
+    Route::delete('admin/edges/{edge}', [EdgeController::class, 'destroy']);
+});
+
+// Публично только чтение
+Route::apiResource('nodes', NodeController::class)->only(['index', 'show']);
 Route::get('graph', [NodeController::class, 'graph']);
-Route::apiResource('edges', EdgeController::class);
+Route::apiResource('edges', EdgeController::class)->only(['index', 'show']);

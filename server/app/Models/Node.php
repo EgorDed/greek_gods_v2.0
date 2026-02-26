@@ -17,6 +17,8 @@ class Node extends Model
         'type_en',
         'short_description',
         'description',
+        'avatar',
+        'icon',
         'meta',
         'x',
         'y',
@@ -69,5 +71,6 @@ class Node extends Model
         'место' => 'place',
         'событие' => 'event',
         'герой' => 'hero',
+        'демиург' => 'demiurge',
     ];
 }
