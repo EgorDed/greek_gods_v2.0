@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('admin/nodes', [NodeController::class, 'store']);
     Route::put('admin/nodes/{node}', [NodeController::class, 'update']);
+    Route::patch('admin/nodes/{node}/position', [NodeController::class, 'updatePosition']);
     Route::delete('admin/nodes/{node}', [NodeController::class, 'destroy']);
 
     Route::post('admin/edges', [EdgeController::class, 'store']);

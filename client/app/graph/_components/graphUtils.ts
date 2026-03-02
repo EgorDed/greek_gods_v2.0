@@ -17,6 +17,16 @@ export function getNodeColor(typeEn: string): string {
     artifact: "rgba(217, 119, 6, 0.7)",
     Demiurge: "rgba(251, 191, 36, 0.7)",
     demiurge: "rgba(251, 191, 36, 0.7)",
+    Personification: "rgba(14, 116, 144, 0.7)",
+    personification: "rgba(14, 116, 144, 0.7)",
+    Titan: "rgba(190, 24, 93, 0.7)",
+    titan: "rgba(190, 24, 93, 0.7)",
+    Giant: "rgba(22, 163, 74, 0.7)",
+    giant: "rgba(22, 163, 74, 0.7)",
+    Oceanid: "rgba(6, 148, 162, 0.7)",
+    oceanid: "rgba(6, 148, 162, 0.7)",
+    Mortal: "rgba(148, 163, 184, 0.7)",
+    mortal: "rgba(148, 163, 184, 0.7)",
   };
   return colors[typeEn] ?? "rgba(100, 116, 139, 0.7)";
 }
@@ -44,6 +54,11 @@ const ICON_BY_TYPE: Record<string, string> = {
   event: "/icons/default.svg",
   artifact: "/icons/default.svg",
   demiurge: "/icons/default.svg",
+  personification: "/icons/default.svg",
+  titan: "/icons/default.svg",
+  giant: "/icons/default.svg",
+  oceanid: "/icons/default.svg",
+  mortal: "/icons/default.svg",
 };
 
 export function getNodeIconPath(code: string, typeEn: string): string {

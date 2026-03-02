@@ -72,5 +72,10 @@ class Node extends Model
         'событие' => 'event',
         'герой' => 'hero',
         'демиург' => 'demiurge',
+        'персонофикация' => 'personification',
+        'титан' => 'titan',
+        'гигант' => 'giant',
+        'океанида' => 'oceanid',
+        'смертный' => 'mortal',
     ];
 }

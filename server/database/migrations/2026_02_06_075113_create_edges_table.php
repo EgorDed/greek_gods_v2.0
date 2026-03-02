@@ -4,32 +4,35 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public array $enumArr = [
         'родитель',
         'ребенок',
         'супруг',
+        'брат/сестра',
         'враг',
         'союзник',
         'владелец',
         'участвует',
-        'расположен в'
+        'расположен в',
     ];
 
     public array $enumArrEn = [
         'parent',
         'child',
         'spouse',
+        'sibling',
         'enemy',
         'ally',
         'owns',
         'participates',
-        'located_in'
+        'located_in',
     ];
 
     public function up(): void
     {
-        Schema::create('edges', function (Blueprint $table) {
+        Schema::create('edges', function (Blueprint $table): void {
             $table->id();
             $table->enum('type', $this->enumArr)->default('родитель');
             $table->enum('type_en', $this->enumArrEn)->default('parent');

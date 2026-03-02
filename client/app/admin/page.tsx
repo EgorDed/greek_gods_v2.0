@@ -36,13 +36,18 @@ const NODE_TYPES: { label: string; value: string }[] = [
   { label: "событие", value: "event" },
   { label: "герой", value: "hero" },
   { label: "демиург", value: "demiurge" },
+  { label: "персонофикация", value: "personification" },
+  { label: "титан", value: "titan" },
+  { label: "гигант", value: "giant" },
+  { label: "океанида", value: "oceanid" },
+  { label: "смертный", value: "mortal" },
 ];
 
 const EDGE_TYPES: { label: string; value: string }[] = [
   { label: "родитель", value: "parent" },
   { label: "ребенок", value: "child" },
   { label: "супруг", value: "spouse" },
-  { label: "брат", value: "brother" },
+  { label: "брат/сестра", value: "sibling" },
   { label: "враг", value: "enemy" },
   { label: "союзник", value: "ally" },
   { label: "владелец", value: "owns" },

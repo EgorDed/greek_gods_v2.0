@@ -109,4 +109,21 @@ class NodeController extends Controller
             'edges' => Edge::all(),
         ]);
     }
+
+    public function updatePosition(Request $request, Node $node)
+    {
+        $request->validate([
+            'position.x' => ['required', 'numeric'],
+            'position.y' => ['required', 'numeric'],
+        ]);
+
+        $node->position = [
+            'x' => (float) $request->input('position.x'),
+            'y' => (float) $request->input('position.y'),
+        ];
+
+        $node->save();
+
+        return response()->json($node);
+    }
 }
