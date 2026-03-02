@@ -3,6 +3,7 @@ import { useGraphContext } from "@/app/graph/_components/GraphContextWrappper";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { IEdge } from "@/app/graph/page";
+import { getNodeRoleLabel } from "@/app/graph/_components/graphUtils";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ??
@@ -152,6 +153,12 @@ const NodeCart = () => {
 
   const isEditable = isEditMode && !!authToken;
 
+  const displayRoleLabel = getNodeRoleLabel(
+    selectedNode.type,
+    selectedNode.type_en,
+    (selectedNode as any).gender as string | undefined,
+  );
+
   return (
     <div className="h-full flex flex-col text-white overflow-y-auto custom-scrollbar bg-black/60 backdrop-blur-xl">
       {/* Header */}
@@ -193,7 +200,7 @@ const NodeCart = () => {
                   Принадлежность
                 </span>
                 <span className="text-purple-300 font-medium">
-                  {selectedNode.type}
+                  {displayRoleLabel}
                 </span>
               </div>
             </div>
@@ -322,6 +329,15 @@ const NodeCart = () => {
                   (node) => node.id === otherNodeId,
                 );
 
+                const relationLabel =
+                  edge.type_en === "sibling" && otherNode
+                    ? (otherNode.gender === "female"
+                        ? "сестра"
+                        : otherNode.gender === "male"
+                          ? "брат"
+                          : "брат/сестра")
+                    : edge.type;
+
                 return (
                   <div
                     key={edge.id}
@@ -329,7 +345,7 @@ const NodeCart = () => {
                   >
                     <div className="flex flex-col">
                       <span className="font-semibold">
-                        {edge.type}{" "}
+                        {relationLabel}{" "}
                         {otherNode ? `→ ${otherNode.title}` : ""}
                       </span>
                     </div>

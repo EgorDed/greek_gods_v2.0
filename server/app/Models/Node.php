@@ -15,6 +15,7 @@ class Node extends Model
         'title',
         'type',
         'type_en',
+        'gender',
         'short_description',
         'description',
         'avatar',

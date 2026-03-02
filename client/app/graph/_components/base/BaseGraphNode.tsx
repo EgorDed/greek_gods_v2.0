@@ -1,7 +1,11 @@
 import { memo } from "react";
 import { Handle, Position } from "@xyflow/react";
 import { INode } from "@/app/graph/page";
-import { getNodeColor, getNodeIconPath } from "@/app/graph/_components/graphUtils";
+import {
+  getNodeColor,
+  getNodeIconPath,
+  getNodeRoleLabel,
+} from "@/app/graph/_components/graphUtils";
 
 export type BaseGraphNodeDemoProps = {
   data: INode;
@@ -15,6 +19,11 @@ export const BaseGraphNodeDemo = memo(({ data }: BaseGraphNodeDemoProps) => {
   const iconPath = data.icon
     ? `/icons/${data.icon}`
     : getNodeIconPath(data.code ?? "", data.type_en ?? "");
+  const roleLabel = getNodeRoleLabel(
+    data.type as string,
+    data.type_en as string,
+    (data as any).gender as string | undefined,
+  );
 
   return (
     <div className="relative group">
@@ -61,7 +70,7 @@ export const BaseGraphNodeDemo = memo(({ data }: BaseGraphNodeDemoProps) => {
               className="text-[10px] px-3 py-0.5 rounded-full bg-[#1a1a22] border border-white/10 uppercase tracking-tighter"
               style={{ color: glowColor }}
             >
-              {data.type}
+              {roleLabel}
             </div>
           </div>
 

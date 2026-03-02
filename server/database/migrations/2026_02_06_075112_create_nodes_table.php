@@ -44,6 +44,7 @@ return new class extends Migration
             $table->string('title');
             $table->enum('type', $this->enumArr)->default('бог');
             $table->enum('type_en', $this->enumArrEn)->default('god');
+            $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->text('short_description')->nullable();
             $table->longText('description')->nullable();
             $table->string('avatar')->nullable();

@@ -66,6 +66,36 @@ export function getNodeIconPath(code: string, typeEn: string): string {
   return ICON_BY_CODE[lower] ?? ICON_BY_TYPE[typeEn?.toLowerCase() ?? ""] ?? "/icons/default.svg";
 }
 
+/**
+ * Отображаемая роль ноды с учётом пола:
+ * бог / богиня, титан / титанида и т.п.
+ */
+export function getNodeRoleLabel(
+  type: string,
+  typeEn: string,
+  gender?: string | null,
+): string {
+  const g = gender ?? "";
+  const t = typeEn ?? "";
+
+  if (t === "god") {
+    if (g === "female") {
+      return "богиня";
+    }
+    return "бог";
+  }
+
+  if (t === "titan") {
+    if (g === "female") {
+      return "титанида";
+    }
+    return "титан";
+  }
+
+  // Для остальных типов пока возвращаем исходный label
+  return type;
+}
+
 const PI = Math.PI;
 const PI_4 = PI / 4;
 

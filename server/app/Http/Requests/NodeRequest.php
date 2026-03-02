@@ -27,6 +27,11 @@ class NodeRequest extends FormRequest
                 'string',
                 Rule::in(array_values(Node::TYPES)),
             ],
+            'gender' => [
+                'nullable',
+                'string',
+                Rule::in(['male', 'female', 'other']),
+            ],
             'short_description' => ['required', 'string'],
             'description' => ['required', 'string'],
             'avatar' => ['nullable', 'string'],

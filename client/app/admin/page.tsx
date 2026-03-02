@@ -8,6 +8,7 @@ interface INode {
   title: string;
   type: string;
   type_en: string;
+  gender: string | null;
   icon: string | null;
   avatar: string | null;
   short_description: string | null;
@@ -60,6 +61,13 @@ const API_URL =
   process.env.API_URL ??
   "http://127.0.0.1:8000/api";
 
+const GENDERS: { label: string; value: string }[] = [
+  { label: "не задан", value: "" },
+  { label: "мужской", value: "male" },
+  { label: "женский", value: "female" },
+  { label: "другое", value: "other" },
+];
+
 export default function AdminPage() {
   const [token, setToken] = useState<string | null>(null);
   const [email, setEmail] = useState("");
@@ -76,6 +84,7 @@ export default function AdminPage() {
   const [newDescription, setNewDescription] = useState("");
   const [newIcon, setNewIcon] = useState("");
   const [newAvatar, setNewAvatar] = useState("");
+  const [newGender, setNewGender] = useState<string>("");
   const [newX, setNewX] = useState<number>(0);
   const [newY, setNewY] = useState<number>(0);
 
@@ -97,6 +106,7 @@ export default function AdminPage() {
   const [editDescription, setEditDescription] = useState("");
   const [editIcon, setEditIcon] = useState("");
   const [editAvatar, setEditAvatar] = useState("");
+  const [editGender, setEditGender] = useState<string>("");
   const [editX, setEditX] = useState<number>(0);
   const [editY, setEditY] = useState<number>(0);
 
@@ -180,6 +190,7 @@ export default function AdminPage() {
     setEditDescription(node.description ?? "");
     setEditIcon(node.icon ?? "");
     setEditAvatar(node.avatar ?? "");
+    setEditGender(node.gender ?? "");
     setEditX(node.position?.x ?? 0);
     setEditY(node.position?.y ?? 0);
   };
@@ -293,6 +304,7 @@ export default function AdminPage() {
           title: newTitle,
           type: nodeType.label,
           type_en: nodeType.value,
+          gender: newGender || null,
           short_description: newShortDescription,
           description: newDescription,
           icon: newIcon || null,
@@ -366,6 +378,7 @@ export default function AdminPage() {
       setNewDescription("");
       setNewIcon("");
       setNewAvatar("");
+      setNewGender("");
       setNewX(0);
       setNewY(0);
       setRelationTargetId("");
@@ -424,6 +437,7 @@ export default function AdminPage() {
           description: editDescription,
           icon: editIcon || null,
           avatar: editAvatar || null,
+          gender: editGender || null,
           meta: {},
           position: {
             x: editX ?? 0,
@@ -631,6 +645,23 @@ export default function AdminPage() {
                 >
                   {NODE_TYPES.map((item) => (
                     <option key={item.value} value={item.label}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="w-[140px]">
+                <label className="block text-xs font-medium text-zinc-700 mb-1">
+                  Пол
+                </label>
+                <select
+                  className="w-full rounded-md border border-zinc-200 px-2 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-zinc-900"
+                  value={newGender}
+                  onChange={(event) => setNewGender(event.target.value)}
+                >
+                  {GENDERS.map((item) => (
+                    <option key={item.value} value={item.value}>
                       {item.label}
                     </option>
                   ))}
@@ -872,6 +903,23 @@ export default function AdminPage() {
                 >
                   {NODE_TYPES.map((item) => (
                     <option key={item.value} value={item.label}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="w-[140px]">
+                <label className="block text-xs font-medium text-zinc-700 mb-1">
+                  Пол
+                </label>
+                <select
+                  className="w-full rounded-md border border-zinc-200 px-2 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-zinc-900"
+                  value={editGender}
+                  onChange={(event) => setEditGender(event.target.value)}
+                >
+                  {GENDERS.map((item) => (
+                    <option key={item.value} value={item.value}>
                       {item.label}
                     </option>
                   ))}

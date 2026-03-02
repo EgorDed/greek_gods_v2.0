@@ -8,6 +8,7 @@ export interface INode extends Record<string, unknown> {
     title: string,
     type: string,
     type_en: string,
+    gender?: string | null,
     meta: Record<string, unknown>  | null,
     short_description: string  | null,
     description: string  | null,
