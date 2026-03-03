@@ -10,19 +10,18 @@ class AdminUserSeeder extends Seeder
 {
     /**
      * Создание администратора для панели управления графом.
-     *
-     * Email: mr.ded.danilov@yandex.ru
-     * Пароль: Ded787898
+     * Учётные данные задаются через переменные окружения:
+     * ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NAME.
      *
      * @return void
      */
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'mr.ded.danilov@yandex.ru'],
+            ['email' => env('ADMIN_EMAIL', 'admin@example.com')],
             [
-                'name' => 'Admin',
-                'password' => Hash::make('Ded787898'),
+                'name'     => env('ADMIN_NAME', 'Admin'),
+                'password' => Hash::make(env('ADMIN_PASSWORD', 'change_me')),
             ]
         );
     }
