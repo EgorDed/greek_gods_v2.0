@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EdgeController;
 use App\Http\Controllers\Api\NodeController;
+use App\Http\Controllers\Api\MetaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('admin/edges/{edge}', [EdgeController::class, 'update']);
     Route::delete('admin/edges/{edge}', [EdgeController::class, 'destroy']);
 });
+
+Route::get('meta/options', [MetaController::class, 'options']);
 
 // Публично только чтение
 Route::apiResource('nodes', NodeController::class)->only(['index', 'show']);

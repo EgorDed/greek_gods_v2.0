@@ -36,8 +36,14 @@ return new class extends Migration
             $table->id();
             $table->enum('type', $this->enumArr)->default('родитель');
             $table->enum('type_en', $this->enumArrEn)->default('parent');
-            $table->foreignId('from_node_id');
-            $table->foreignId('to_node_id');
+            $table->foreignId('from_node_id')
+                ->index()
+                ->constrained('nodes')
+                ->cascadeOnDelete();
+            $table->foreignId('to_node_id')
+                ->index()
+                ->constrained('nodes')
+                ->cascadeOnDelete();
             $table->json('meta')->nullable();
             $table->timestamps();
         });

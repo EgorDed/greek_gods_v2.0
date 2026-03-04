@@ -10,7 +10,8 @@ class GraphSeeder extends Seeder
 {
     /**
      * Узлы графа: code => [title, type, type_en, x, y, short_description, description]
-     * Координаты x,y — позиция на канвасе React Flow (в пикселях).
+     * Поля x и y в массивах ниже больше не используются напрямую:
+     * конечные координаты вычисляются автоматически на основе родительских связей.
      */
     private function nodeData(): array
     {
@@ -271,12 +272,12 @@ class GraphSeeder extends Seeder
         return [
             // Происхождение первичных богов
             ['chaos', 'nyx', 'родитель', 'parent'],
-            ['chaos', 'erebus', 'родитель', 'parent'],
             ['chaos', 'tartarus', 'родитель', 'parent'],
             ['chaos', 'gaia', 'родитель', 'parent'],
             ['chaos', 'eros', 'родитель', 'parent'],
 
             // Дети Нюкты и Эреба
+            ['nyx', 'erebus', 'родитель', 'parent'],
             ['nyx', 'hemera', 'родитель', 'parent'],
             ['erebus', 'hemera', 'родитель', 'parent'],
             ['nyx', 'aether', 'родитель', 'parent'],
@@ -324,13 +325,354 @@ class GraphSeeder extends Seeder
         ];
     }
 
+    /**
+     * Вычисляем координаты узлов в духе layout `dot`:
+     * слои по поколениям и упорядочивание внутри слоя по барицентрам.
+     */
+    private function calculatePositions(array $nodesByCode, array $edges): array
+    {
+        $parentsByChild = [];
+        $childrenByParent = [];
+
+        foreach ($edges as [$fromCode, $toCode, $type, $typeEn]) {
+            if ($typeEn !== 'parent') {
+                continue;
+            }
+
+            $parentsByChild[$toCode] ??= [];
+            $parentsByChild[$toCode][] = $fromCode;
+
+            $childrenByParent[$fromCode] ??= [];
+            $childrenByParent[$fromCode][] = $toCode;
+        }
+
+        $levels = [];
+
+        $resolveLevel = function (string $code) use (&$resolveLevel, &$levels, $parentsByChild): int {
+            if (array_key_exists($code, $levels)) {
+                return $levels[$code];
+            }
+
+            $parents = $parentsByChild[$code] ?? [];
+
+            if (empty($parents)) {
+                $levels[$code] = 0;
+
+                return 0;
+            }
+
+            $maxParentLevel = 0;
+
+            foreach ($parents as $parentCode) {
+                $parentLevel = $resolveLevel($parentCode);
+                if ($parentLevel + 1 > $maxParentLevel) {
+                    $maxParentLevel = $parentLevel + 1;
+                }
+            }
+
+            $levels[$code] = $maxParentLevel;
+
+            return $maxParentLevel;
+        };
+
+        foreach ($nodesByCode as $code => $_data) {
+            $resolveLevel($code);
+        }
+
+        $nodesByLevel = [];
+
+        foreach ($levels as $code => $level) {
+            $nodesByLevel[$level] ??= [];
+            $nodesByLevel[$level][] = $code;
+        }
+
+        ksort($nodesByLevel);
+
+        $maxLevel = (int) max(array_keys($nodesByLevel));
+
+        $indexInLevel = [];
+        foreach ($nodesByLevel as $level => $codes) {
+            $indexInLevel[$level] = [];
+            foreach ($codes as $i => $code) {
+                $indexInLevel[$level][$code] = $i;
+            }
+        }
+
+        $sameLevelNeighbors = [];
+
+        foreach ($edges as [$fromCode, $toCode, $type, $typeEn]) {
+            if ($typeEn === 'parent') {
+                continue;
+            }
+
+            if (!array_key_exists($fromCode, $levels) || !array_key_exists($toCode, $levels)) {
+                continue;
+            }
+
+            if ($levels[$fromCode] !== $levels[$toCode]) {
+                continue;
+            }
+
+            $sameLevelNeighbors[$fromCode] ??= [];
+            $sameLevelNeighbors[$fromCode][] = $toCode;
+
+            $sameLevelNeighbors[$toCode] ??= [];
+            $sameLevelNeighbors[$toCode][] = $fromCode;
+        }
+
+        $sweeps = 2;
+
+        for ($iter = 0; $iter < $sweeps; $iter++) {
+            for ($level = 1; $level <= $maxLevel; $level++) {
+                $current = $nodesByLevel[$level];
+                $upper = $nodesByLevel[$level - 1] ?? [];
+
+                if (empty($current) || empty($upper)) {
+                    continue;
+                }
+
+                $upperIndex = $indexInLevel[$level - 1];
+
+                $withBarycenter = [];
+
+                foreach ($current as $code) {
+                    $parents = $parentsByChild[$code] ?? [];
+                    $neighbors = $sameLevelNeighbors[$code] ?? [];
+
+                    $sum = 0.0;
+                    $count = 0;
+
+                    foreach ($parents as $parentCode) {
+                        if (array_key_exists($parentCode, $upperIndex)) {
+                            $sum += $upperIndex[$parentCode];
+                            $count++;
+                        }
+                    }
+
+                    foreach ($neighbors as $neighborCode) {
+                        if (array_key_exists($neighborCode, $indexInLevel[$level])) {
+                            $sum += $indexInLevel[$level][$neighborCode];
+                            $count++;
+                        }
+                    }
+
+                    $barycenter = $count > 0 ? $sum / $count : $indexInLevel[$level][$code];
+
+                    $withBarycenter[] = [
+                        'code' => $code,
+                        'barycenter' => $barycenter,
+                    ];
+                }
+
+                usort(
+                    $withBarycenter,
+                    static function (array $a, array $b): int {
+                        if ($a['barycenter'] === $b['barycenter']) {
+                            return strcmp($a['code'], $b['code']);
+                        }
+
+                        return $a['barycenter'] <=> $b['barycenter'];
+                    }
+                );
+
+                $nodesByLevel[$level] = array_column($withBarycenter, 'code');
+
+                $indexInLevel[$level] = [];
+                foreach ($nodesByLevel[$level] as $i => $code) {
+                    $indexInLevel[$level][$code] = $i;
+                }
+            }
+
+            for ($level = $maxLevel - 1; $level >= 0; $level--) {
+                $current = $nodesByLevel[$level];
+                $lower = $nodesByLevel[$level + 1] ?? [];
+
+                if (empty($current) || empty($lower)) {
+                    continue;
+                }
+
+                $lowerIndex = $indexInLevel[$level + 1];
+
+                $withBarycenter = [];
+
+                foreach ($current as $code) {
+                    $children = $childrenByParent[$code] ?? [];
+                    $neighbors = $sameLevelNeighbors[$code] ?? [];
+
+                    $sum = 0.0;
+                    $count = 0;
+
+                    foreach ($children as $childCode) {
+                        if (array_key_exists($childCode, $lowerIndex)) {
+                            $sum += $lowerIndex[$childCode];
+                            $count++;
+                        }
+                    }
+
+                    foreach ($neighbors as $neighborCode) {
+                        if (array_key_exists($neighborCode, $indexInLevel[$level])) {
+                            $sum += $indexInLevel[$level][$neighborCode];
+                            $count++;
+                        }
+                    }
+
+                    $barycenter = $count > 0 ? $sum / $count : $indexInLevel[$level][$code];
+
+                    $withBarycenter[] = [
+                        'code' => $code,
+                        'barycenter' => $barycenter,
+                    ];
+                }
+
+                usort(
+                    $withBarycenter,
+                    static function (array $a, array $b): int {
+                        if ($a['barycenter'] === $b['barycenter']) {
+                            return strcmp($a['code'], $b['code']);
+                        }
+
+                        return $a['barycenter'] <=> $b['barycenter'];
+                    }
+                );
+
+                $nodesByLevel[$level] = array_column($withBarycenter, 'code');
+
+                $indexInLevel[$level] = [];
+                foreach ($nodesByLevel[$level] as $i => $code) {
+                    $indexInLevel[$level][$code] = $i;
+                }
+            }
+        }
+
+        $horizontalGap = 360;
+        $verticalGap = 320;
+        $groupExtraGap = 360;
+
+        $positions = [];
+
+        foreach ($nodesByLevel as $level => $codes) {
+            $count = count($codes);
+            if ($count === 0) {
+                continue;
+            }
+
+            $groups = [];
+
+            foreach ($codes as $code) {
+                $parents = $parentsByChild[$code] ?? [];
+                sort($parents);
+
+                if (!empty($parents)) {
+                    $key = 'parents:' . implode(',', $parents);
+                } else {
+                    $key = 'single:' . $code;
+                }
+
+                if (!array_key_exists($key, $groups)) {
+                    $groups[$key] = [
+                        'key' => $key,
+                        'codes' => [],
+                    ];
+                }
+
+                $groups[$key]['codes'][] = $code;
+            }
+
+            $groupList = [];
+
+            foreach ($groups as $group) {
+                $codesInGroup = $group['codes'];
+                $sum = 0.0;
+                $cnt = 0;
+
+                foreach ($codesInGroup as $c) {
+                    if (isset($indexInLevel[$level][$c])) {
+                        $sum += $indexInLevel[$level][$c];
+                        $cnt++;
+                    }
+                }
+
+                $barycenter = $cnt > 0 ? $sum / $cnt : 0.0;
+
+                $groupList[] = [
+                    'key' => $group['key'],
+                    'codes' => $codesInGroup,
+                    'barycenter' => $barycenter,
+                ];
+            }
+
+            usort(
+                $groupList,
+                static function (array $a, array $b): int {
+                    if ($a['barycenter'] === $b['barycenter']) {
+                        return strcmp($a['key'], $b['key']);
+                    }
+
+                    return $a['barycenter'] <=> $b['barycenter'];
+                }
+            );
+
+            $positionsInLevel = [];
+            $currentX = 0.0;
+
+            foreach ($groupList as $groupIndex => $group) {
+                if ($groupIndex > 0) {
+                    $currentX += $groupExtraGap;
+                }
+
+                foreach ($group['codes'] as $code) {
+                    $positionsInLevel[] = [
+                        'code' => $code,
+                        'x' => $currentX,
+                    ];
+
+                    $currentX += $horizontalGap;
+                }
+            }
+
+            $minX = $positionsInLevel[0]['x'];
+            $maxX = $positionsInLevel[0]['x'];
+
+            foreach ($positionsInLevel as $item) {
+                if ($item['x'] < $minX) {
+                    $minX = $item['x'];
+                }
+                if ($item['x'] > $maxX) {
+                    $maxX = $item['x'];
+                }
+            }
+
+            $center = ($minX + $maxX) / 2.0;
+            $y = $level * $verticalGap;
+
+            foreach ($positionsInLevel as $item) {
+                $code = $item['code'];
+                $x = $item['x'] - $center;
+
+                $positions[$code] = [
+                    'x' => $x,
+                    'y' => $y,
+                ];
+            }
+        }
+
+        return $positions;
+    }
+
     public function run(): void
     {
         Edge::query()->delete();
         Node::query()->delete();
 
+        $nodeDefinitions = $this->nodeData();
+        $edgeDefinitions = $this->edgeData();
+
+        $positions = $this->calculatePositions($nodeDefinitions, $edgeDefinitions);
+
         $nodesByCode = [];
-        foreach ($this->nodeData() as $code => $data) {
+        foreach ($nodeDefinitions as $code => $data) {
+            $position = $positions[$code] ?? ['x' => 0, 'y' => 0];
+
             $node = Node::create([
                 'code' => $code,
                 'title' => $data['title'],
@@ -342,13 +684,13 @@ class GraphSeeder extends Seeder
                 'short_description' => $data['short_description'] ?? null,
                 'description' => $data['description'] ?? null,
                 'meta' => $data['meta'] ?? ['key' => 'value'],
-                'x' => $data['x'],
-                'y' => $data['y'],
+                'x' => $position['x'],
+                'y' => $position['y'],
             ]);
             $nodesByCode[$code] = $node;
         }
 
-        foreach ($this->edgeData() as [$fromCode, $toCode, $type, $typeEn]) {
+        foreach ($edgeDefinitions as [$fromCode, $toCode, $type, $typeEn]) {
             $from = $nodesByCode[$fromCode] ?? null;
             $to = $nodesByCode[$toCode] ?? null;
             if ($from && $to) {

@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React from "react";
 import NodeCart from "@/app/graph/_components/NodeCart";
 import Graph from "@/app/graph/_components/Graph";
 
@@ -13,7 +13,7 @@ const GraphArea = () => {
                 <NodeCart />
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default GraphArea
+export default GraphArea;

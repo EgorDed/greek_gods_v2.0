@@ -1,99 +1,134 @@
+import type { IGraphEdge, IGraphNode } from "@/app/graph/types";
+
 /**
  * Цвет свечения узла по типу (как на референсе: God — фиолетовый, Hero — синий и т.д.)
  */
 export function getNodeColor(typeEn: string): string {
-  const colors: Record<string, string> = {
-    God: "rgba(147, 51, 234, 0.7)",
-    god: "rgba(147, 51, 234, 0.7)",
-    Hero: "rgba(59, 130, 246, 0.7)",
-    hero: "rgba(59, 130, 246, 0.7)",
-    Place: "rgba(180, 83, 9, 0.7)",
-    place: "rgba(180, 83, 9, 0.7)",
-    Myth: "rgba(234, 88, 12, 0.7)",
-    myth: "rgba(234, 88, 12, 0.7)",
-    Event: "rgba(16, 185, 129, 0.7)",
-    event: "rgba(16, 185, 129, 0.7)",
-    Artifact: "rgba(217, 119, 6, 0.7)",
-    artifact: "rgba(217, 119, 6, 0.7)",
-    Demiurge: "rgba(251, 191, 36, 0.7)",
-    demiurge: "rgba(251, 191, 36, 0.7)",
-    Personification: "rgba(14, 116, 144, 0.7)",
-    personification: "rgba(14, 116, 144, 0.7)",
-    Titan: "rgba(190, 24, 93, 0.7)",
-    titan: "rgba(190, 24, 93, 0.7)",
-    Giant: "rgba(22, 163, 74, 0.7)",
-    giant: "rgba(22, 163, 74, 0.7)",
-    Oceanid: "rgba(6, 148, 162, 0.7)",
-    oceanid: "rgba(6, 148, 162, 0.7)",
-    Mortal: "rgba(148, 163, 184, 0.7)",
-    mortal: "rgba(148, 163, 184, 0.7)",
-  };
-  return colors[typeEn] ?? "rgba(100, 116, 139, 0.7)";
+    const colors: Record<string, string> = {
+        God: "rgba(147, 51, 234, 0.7)",
+        god: "rgba(147, 51, 234, 0.7)",
+        Hero: "rgba(59, 130, 246, 0.7)",
+        hero: "rgba(59, 130, 246, 0.7)",
+        Place: "rgba(180, 83, 9, 0.7)",
+        place: "rgba(180, 83, 9, 0.7)",
+        Myth: "rgba(234, 88, 12, 0.7)",
+        myth: "rgba(234, 88, 12, 0.7)",
+        Event: "rgba(16, 185, 129, 0.7)",
+        event: "rgba(16, 185, 129, 0.7)",
+        Artifact: "rgba(217, 119, 6, 0.7)",
+        artifact: "rgba(217, 119, 6, 0.7)",
+        Demiurge: "rgba(251, 191, 36, 0.7)",
+        demiurge: "rgba(251, 191, 36, 0.7)",
+        Personification: "rgba(14, 116, 144, 0.7)",
+        personification: "rgba(14, 116, 144, 0.7)",
+        Titan: "rgba(190, 24, 93, 0.7)",
+        titan: "rgba(190, 24, 93, 0.7)",
+        Giant: "rgba(22, 163, 74, 0.7)",
+        giant: "rgba(22, 163, 74, 0.7)",
+        Oceanid: "rgba(6, 148, 162, 0.7)",
+        oceanid: "rgba(6, 148, 162, 0.7)",
+        Mortal: "rgba(148, 163, 184, 0.7)",
+        mortal: "rgba(148, 163, 184, 0.7)",
+    };
+    return colors[typeEn] ?? "rgba(100, 116, 139, 0.7)";
 }
 
 /** Путь к иконке по коду узла (zeus, hera, apollo...) или по типу */
 const ICON_BY_CODE: Record<string, string> = {
-  zeus: "/icons/zeus.svg",
-  hera: "/icons/hera.svg",
-  apollo: "/icons/apollo.svg",
-  athena: "/icons/athena.svg",
-  aphena: "/icons/athena.svg", // опечатка в БД
-  poseidon: "/icons/poseidon.svg",
-  hades: "/icons/hades.svg",
-  hercules: "/icons/hero.svg",
-  heracles: "/icons/hero.svg",
-  olympus: "/icons/place.svg",
-  "test-node-1": "/icons/default.svg",
+    zeus: "/icons/zeus.svg",
+    hera: "/icons/hera.svg",
+    apollo: "/icons/apollo.svg",
+    athena: "/icons/athena.svg",
+    aphena: "/icons/athena.svg", // опечатка в БД
+    poseidon: "/icons/poseidon.svg",
+    hades: "/icons/hades.svg",
+    hercules: "/icons/hero.svg",
+    heracles: "/icons/hero.svg",
+    olympus: "/icons/place.svg",
+    "test-node-1": "/icons/default.svg",
 };
 
 const ICON_BY_TYPE: Record<string, string> = {
-  god: "/icons/zeus.svg",
-  hero: "/icons/hero.svg",
-  place: "/icons/place.svg",
-  myth: "/icons/default.svg",
-  event: "/icons/default.svg",
-  artifact: "/icons/default.svg",
-  demiurge: "/icons/default.svg",
-  personification: "/icons/default.svg",
-  titan: "/icons/default.svg",
-  giant: "/icons/default.svg",
-  oceanid: "/icons/default.svg",
-  mortal: "/icons/default.svg",
+    god: "/icons/zeus.svg",
+    hero: "/icons/hero.svg",
+    place: "/icons/place.svg",
+    myth: "/icons/default.svg",
+    event: "/icons/default.svg",
+    artifact: "/icons/default.svg",
+    demiurge: "/icons/default.svg",
+    personification: "/icons/default.svg",
+    titan: "/icons/default.svg",
+    giant: "/icons/default.svg",
+    oceanid: "/icons/default.svg",
+    mortal: "/icons/default.svg",
 };
 
 export function getNodeIconPath(code: string, typeEn: string): string {
-  const lower = code?.toLowerCase() ?? "";
-  return ICON_BY_CODE[lower] ?? ICON_BY_TYPE[typeEn?.toLowerCase() ?? ""] ?? "/icons/default.svg";
+    const lower = code?.toLowerCase() ?? "";
+    return ICON_BY_CODE[lower] ?? ICON_BY_TYPE[typeEn?.toLowerCase() ?? ""] ?? "/icons/default.svg";
 }
 
 /**
  * Отображаемая роль ноды с учётом пола:
  * бог / богиня, титан / титанида и т.п.
  */
-export function getNodeRoleLabel(
-  type: string,
-  typeEn: string,
-  gender?: string | null,
+export function getNodeRoleLabel(type: string, typeEn: string, gender?: string | null): string {
+    const g = gender ?? "";
+    const t = typeEn ?? "";
+
+    if (t === "god") {
+        if (g === "female") {
+            return "богиня";
+        }
+        return "бог";
+    }
+
+    if (t === "titan") {
+        if (g === "female") {
+            return "титанида";
+        }
+        return "титан";
+    }
+
+    // Для остальных типов пока возвращаем исходный label
+    return type;
+}
+
+/**
+ * Отображаемый заголовок ноды:
+ * если есть title — используем его, иначе fallback к code.
+ */
+export function getNodeDisplayTitle(node: IGraphNode): string {
+    if (node.title && node.title.trim().length > 0) {
+        return node.title;
+    }
+    return node.code;
+}
+
+/**
+ * Отображаемый label связи с учётом типа и пола другой ноды.
+ * Для связи sibling:
+ * - female → "сестра"
+ * - male → "брат"
+ * - иначе → "брат/сестра"
+ * Для остальных типов берём edge.type.
+ */
+export function formatEdgeLabel(
+    edge: IGraphEdge,
+    _currentNode: IGraphNode,
+    otherNode: IGraphNode | null,
 ): string {
-  const g = gender ?? "";
-  const t = typeEn ?? "";
-
-  if (t === "god") {
-    if (g === "female") {
-      return "богиня";
+    if (edge.type_en === "sibling" && otherNode) {
+        if (otherNode.gender === "female") {
+            return "сестра";
+        }
+        if (otherNode.gender === "male") {
+            return "брат";
+        }
+        return "брат/сестра";
     }
-    return "бог";
-  }
 
-  if (t === "titan") {
-    if (g === "female") {
-      return "титанида";
-    }
-    return "титан";
-  }
-
-  // Для остальных типов пока возвращаем исходный label
-  return type;
+    return edge.type;
 }
 
 const PI = Math.PI;
@@ -101,25 +136,25 @@ const PI_4 = PI / 4;
 
 /** Сторона ноды по углу (в радианах) от центра к другой точке: right, bottom, left, top */
 function angleToSide(angle: number): "right" | "bottom" | "left" | "top" {
-  if (angle >= -PI_4 && angle < PI_4) return "right";
-  if (angle >= PI_4 && angle < 3 * PI_4) return "bottom";
-  if (angle >= 3 * PI_4 || angle < -3 * PI_4) return "left";
-  return "top";
+    if (angle >= -PI_4 && angle < PI_4) return "right";
+    if (angle >= PI_4 && angle < 3 * PI_4) return "bottom";
+    if (angle >= 3 * PI_4 || angle < -3 * PI_4) return "left";
+    return "top";
 }
 
 /** Какие handle использовать для ребра: источник выходит в сторону цели, цель принимает с противоположной стороны */
 export function getHandleIdsForEdge(
-  sourceX: number,
-  sourceY: number,
-  targetX: number,
-  targetY: number
+    sourceX: number,
+    sourceY: number,
+    targetX: number,
+    targetY: number,
 ): { sourceHandle: string; targetHandle: string } {
-  const angleToTarget = Math.atan2(targetY - sourceY, targetX - sourceX);
-  const angleToSource = Math.atan2(sourceY - targetY, sourceX - targetX);
-  const sourceSide = angleToSide(angleToTarget);
-  const targetSide = angleToSide(angleToSource);
-  return {
-    sourceHandle: `source-${sourceSide}`,
-    targetHandle: `target-${targetSide}`,
-  };
+    const angleToTarget = Math.atan2(targetY - sourceY, targetX - sourceX);
+    const angleToSource = Math.atan2(sourceY - targetY, sourceX - targetX);
+    const sourceSide = angleToSide(angleToTarget);
+    const targetSide = angleToSide(angleToSource);
+    return {
+        sourceHandle: `source-${sourceSide}`,
+        targetHandle: `target-${targetSide}`,
+    };
 }

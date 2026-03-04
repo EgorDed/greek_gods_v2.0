@@ -8,7 +8,6 @@ use App\Models\Edge;
 use App\Models\Node;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use function PHPUnit\Framework\isType;
 
 class NodeController extends Controller
 {
@@ -96,7 +95,11 @@ class NodeController extends Controller
 
     public function destroy(Node $node)
     {
-        // TODO: Проверять связанные edge.
+        Edge::query()
+            ->where('from_node_id', $node->id)
+            ->orWhere('to_node_id', $node->id)
+            ->delete();
+
         $node->delete();
 
         return response()->noContent();
